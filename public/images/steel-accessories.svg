@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2a2a"/><stop offset="1" stop-color="#0e0e0e"/></linearGradient>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6C98A"/><stop offset="0.5" stop-color="#C9A45C"/><stop offset="1" stop-color="#8A6A2B"/></linearGradient>
+<linearGradient id="steel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d838a"/><stop offset="0.35" stop-color="#e8ebee"/><stop offset="0.65" stop-color="#9aa0a6"/><stop offset="1" stop-color="#d5d9dd"/></linearGradient>
+<linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1b1b"/><stop offset="1" stop-color="#090909"/></linearGradient>
+</defs>
+<rect width="800" height="600" fill="url(#bg)"/>
+<rect x="110" y="150" width="90" height="170" fill="url(#steel)"/><circle cx="155" cy="185" r="9" fill="#222"/><circle cx="155" cy="285" r="9" fill="#222"/><rect x="195" y="150" width="30" height="170" rx="14" fill="url(#gold)"/><rect x="330" y="140" width="30" height="190" rx="14" fill="url(#steel)"/><rect x="330" y="150" width="140" height="22" rx="10" fill="url(#steel)"/><rect x="330" y="300" width="140" height="22" rx="10" fill="url(#steel)"/><path d="M560 150 h22 v140 h110 v22 h-132z" fill="url(#gold)"/><circle cx="571" cy="175" r="6" fill="#222"/><circle cx="670" cy="301" r="6" fill="#222"/><polygon points="120,400 140,388 160,400 160,424 140,436 120,424" fill="url(#steel)" stroke="#444"/><polygon points="220,400 240,388 260,400 260,424 240,436 220,424" fill="url(#steel)" stroke="#444"/><polygon points="320,400 340,388 360,400 360,424 340,436 320,424" fill="url(#steel)" stroke="#444"/><polygon points="420,400 440,388 460,400 460,424 440,436 420,424" fill="url(#steel)" stroke="#444"/><polygon points="520,400 540,388 560,400 560,424 540,436 520,424" fill="url(#steel)" stroke="#444"/><polygon points="620,400 640,388 660,400 660,424 640,436 620,424" fill="url(#steel)" stroke="#444"/>
+</svg>

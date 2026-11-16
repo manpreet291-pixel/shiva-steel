@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2a2a"/><stop offset="1" stop-color="#0e0e0e"/></linearGradient>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6C98A"/><stop offset="0.5" stop-color="#C9A45C"/><stop offset="1" stop-color="#8A6A2B"/></linearGradient>
+<linearGradient id="steel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d838a"/><stop offset="0.35" stop-color="#e8ebee"/><stop offset="0.65" stop-color="#9aa0a6"/><stop offset="1" stop-color="#d5d9dd"/></linearGradient>
+<linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1b1b"/><stop offset="1" stop-color="#090909"/></linearGradient>
+</defs>
+<rect width="800" height="600" fill="url(#bg)"/>
+<rect x="230" y="70" width="340" height="420" fill="none" stroke="url(#gold)" stroke-width="26"/><rect x="256" y="96" width="288" height="394" fill="#241d12"/><rect x="276" y="116" width="248" height="170" fill="none" stroke="#4b3c1e" stroke-width="5"/><rect x="276" y="306" width="248" height="164" fill="none" stroke="#4b3c1e" stroke-width="5"/><rect x="490" y="290" width="14" height="46" rx="6" fill="url(#gold)"/><path d="M230 100 h-14 M570 100 h14" stroke="url(#gold)" stroke-width="4"/><path d="M230 160 h-14 M570 160 h14" stroke="url(#gold)" stroke-width="4"/><path d="M230 220 h-14 M570 220 h14" stroke="url(#gold)" stroke-width="4"/><path d="M230 280 h-14 M570 280 h14" stroke="url(#gold)" stroke-width="4"/><path d="M230 340 h-14 M570 340 h14" stroke="url(#gold)" stroke-width="4"/><path d="M230 400 h-14 M570 400 h14" stroke="url(#gold)" stroke-width="4"/><rect y="490" width="800" height="110" fill="url(#floor)"/>
+</svg>
