@@ -7,6 +7,7 @@ import useGallery from '../hooks/useGallery.js';
 export default function GallerySection() {
   const ref = useReveal();
   const { categories } = useGallery();
+  const gridRef = useReveal(categories.length);
   return (
     <section id="gallery" className="section">
       <div className="container">
@@ -15,7 +16,7 @@ export default function GallerySection() {
           <h2 className="section__title">A look at our steel work</h2>
           <p className="section__lead">Choose a category to see photos of that work.</p>
         </div>
-        <div className="tiles">
+        <div className="tiles stagger" ref={gridRef}>
           {categories.map((c) => (
             <CategoryTile key={c.id} category={c} />
           ))}

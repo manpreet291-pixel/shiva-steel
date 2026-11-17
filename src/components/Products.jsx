@@ -5,6 +5,7 @@ import { products } from '../data/products.js';
 
 export default function Products() {
   const ref = useReveal();
+  const gridRef = useReveal();
   const { categories } = useGallery();
   const galleryFor = (productId) => {
     const cat = categories.find((c) => c.productId === productId && c.count > 0) || categories.find((c) => c.productId === productId);
@@ -21,7 +22,7 @@ export default function Products() {
             Browse our categories and message us on WhatsApp for any product you like.
           </p>
         </div>
-        <div className="grid">
+        <div className="grid stagger" ref={gridRef}>
           {products.map((p) => (
             <ProductCard key={p.id} product={p} galleryHref={galleryFor(p.id)} />
           ))}

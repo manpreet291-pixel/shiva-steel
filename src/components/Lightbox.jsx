@@ -39,7 +39,7 @@ export default function Lightbox({ items, index, onClose, onIndex }) {
         </button>
       )}
       <figure className="lightbox__figure" onClick={(e) => e.stopPropagation()}>
-        <img src={asset(item.image)} alt={item.title} />
+        <img key={item.image} src={asset(item.image)} alt={item.title} />
         <figcaption>
           {item.title} <span className="lightbox__count">({index + 1} / {total})</span>
         </figcaption>

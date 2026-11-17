@@ -8,6 +8,7 @@ import GallerySection from './components/GallerySection.jsx';
 import Contact from './components/Contact.jsx';
 import Footer from './components/Footer.jsx';
 import WhatsAppFloat from './components/WhatsAppFloat.jsx';
+import ScrollProgress from './components/ScrollProgress.jsx';
 import PageHero from './components/PageHero.jsx';
 import GalleryPage from './pages/GalleryPage.jsx';
 import CategoryPage from './pages/CategoryPage.jsx';
@@ -66,8 +67,9 @@ export default function App() {
 
   return (
     <>
+      <ScrollProgress />
       <Header solid={clean !== '/'} />
-      <main>{page}</main>
+      <main key={clean} className="page">{page}</main>
       <Footer />
       <WhatsAppFloat />
     </>

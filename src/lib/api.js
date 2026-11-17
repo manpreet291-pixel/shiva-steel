@@ -68,7 +68,7 @@ export async function adminRequest(method, url, body) {
 }
 
 // Shrinks a photo in the browser before upload (max 1600px, JPEG) so pages stay fast.
-export function compressImage(file, maxSize = 1600, quality = 0.85) {
+export function compressImage(file, maxSize = 1600, quality = 0.8) {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
     const img = new Image();

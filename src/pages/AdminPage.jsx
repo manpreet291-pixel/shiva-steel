@@ -109,7 +109,7 @@ function Dashboard({ onLogout }) {
         <button className="btn btn--outline-dark btn--sm" onClick={logout}>Log out</button>
       </div>
       {notice && <p className={`msg msg--${notice.type}`} role="status">{notice.text}</p>}
-      {offline && <p className="msg msg--err">Could not load data from the server.</p>}
+      {offline && <p className="msg msg--err">Could not load data from the server. On Vercel this usually means the Blob store is not connected yet (see the README).</p>}
       {loading ? <p className="empty">Loading…</p> : tab === 'photos'
         ? <PhotosTab categories={categories} items={items} run={run} say={say} />
         : <CategoriesTab categories={categories} run={run} />}

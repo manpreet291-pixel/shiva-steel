@@ -10,6 +10,7 @@ const points = [
 
 export default function WhyChoose() {
   const ref = useReveal();
+  const gridRef = useReveal();
   return (
     <section className="section section--dark" aria-labelledby="why-title">
       <div className="container">
@@ -19,7 +20,7 @@ export default function WhyChoose() {
             Built on craft, designed for you
           </h2>
         </div>
-        <div className="why">
+        <div className="why stagger" ref={gridRef}>
           {points.map((p) => (
             <div className="why__item" key={p.title}>
               <span className="why__icon">

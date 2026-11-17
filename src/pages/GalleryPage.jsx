@@ -2,10 +2,12 @@ import CategoryTile from '../components/CategoryTile.jsx';
 import PageHero from '../components/PageHero.jsx';
 import { Link } from '../lib/router.jsx';
 import useGallery from '../hooks/useGallery.js';
+import useReveal from '../hooks/useReveal.js';
 import usePageMeta from '../hooks/usePageMeta.js';
 
 export default function GalleryPage() {
   const { categories, loading } = useGallery();
+  const gridRef = useReveal(loading);
   usePageMeta({
     title: 'Gallery | SHIVA STEEL, Steel Gates & Railings in Kharar, Mohali',
     description:
@@ -28,7 +30,7 @@ export default function GalleryPage() {
           {loading ? (
             <p className="empty">Loading gallery…</p>
           ) : (
-            <div className="tiles">
+            <div className="tiles stagger" ref={gridRef}>
               {categories.map((c) => (
                 <CategoryTile key={c.id} category={c} />
               ))}

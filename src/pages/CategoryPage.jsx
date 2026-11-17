@@ -4,6 +4,7 @@ import Lightbox from '../components/Lightbox.jsx';
 import { WhatsAppIcon } from '../components/ProductCard.jsx';
 import { Link } from '../lib/router.jsx';
 import useGallery from '../hooks/useGallery.js';
+import useReveal from '../hooks/useReveal.js';
 import usePageMeta from '../hooks/usePageMeta.js';
 import { products } from '../data/products.js';
 import { asset, whatsappLink } from '../data/site.js';
@@ -14,6 +15,7 @@ export default function CategoryPage({ slug }) {
   const category = categories.find((c) => c.slug === slug);
   const photos = category ? items.filter((i) => i.categoryId === category.id) : [];
   const product = category ? products.find((p) => p.id === category.productId) : null;
+  const gridRef = useReveal(loading || !category);
 
   usePageMeta({
     title: category ? `${category.name} Gallery | SHIVA STEEL, Kharar, Mohali` : 'Gallery | SHIVA STEEL',
@@ -69,7 +71,7 @@ export default function CategoryPage({ slug }) {
           {photos.length === 0 ? (
             <p className="empty">Photos for this category are coming soon. Message us on WhatsApp to see our latest work.</p>
           ) : (
-            <div className="gallery">
+            <div className="gallery stagger" ref={gridRef}>
               {photos.map((g, i) => (
                 <button type="button" key={g.id} className="gallery__item" onClick={() => setActive(i)} aria-label={`Open image: ${g.title}`}>
                   <img src={asset(g.image)} alt={`${g.title} by SHIVA STEEL`} loading="lazy" width="800" height="600" />
