@@ -36,6 +36,8 @@ This project already works on Vercel: `vercel.json` makes deep links such as `/a
 4. **Redeploy** (Deployments, then the latest one, then Redeploy) so the new settings are picked up.
 5. Open `https://your-site.vercel.app/admin` and log in.
 
+**Quick check:** after deploying, open `https://your-site.vercel.app/api/health`. It must show `{"ok":true}`. If you see a web page, 404 or "405 Method Not Allowed", the `api` folder was not deployed. Upload the whole project again (the `api` folder, `vercel.json`, `server` and `src` folders must all be included; if you use GitHub, check they appear in the repository), then redeploy.
+
 Notes for Vercel: photos are resized in the browser before upload because Vercel accepts requests up to about 4.5 MB; the 10-wrong-attempts lock is per server instance, so choose a strong password; data is stored in the Blob store, so nothing is lost on redeploys. Until the Blob store is connected the site shows the built-in sample gallery and the admin says storage is not connected.
 
 ## Production on your own server (Node)
@@ -49,12 +51,16 @@ The admin panel needs this Node server, so use hosting that runs Node **with a p
 - Use HTTPS (hosts like Render/Railway give it free). Keep the password long.
 - Login is limited to 5 wrong attempts per 10 minutes.
 
+## Banner image (top of the home page)
+- Open `/admin`, go to the **Banners** tab and upload your banner image(s). Best size: wide, about 2000 × 1000 px (JPG or WebP). Keep the main subject on the **right**, because the heading sits on the left.
+- One banner = a fixed image. Two or more (up to 8) = an automatic slideshow with arrows and dots.
+- Until you upload one, the home page shows a default sample banner.
+
 ## Day / night mode and animations
-- The sun/moon button in the header switches the whole site between **day** and **night**. Until a visitor picks one, it follows their local time (6 am to 6 pm = day). Their choice is remembered.
-- Day: bright sky, rotating sun rays, drifting clouds. Night: moon, twinkling stars. The sun sets and the moon rises when you switch.
-- Other motion: staggered entrance of the hero text, product cards, tiles and photos as you scroll, shimmering gold heading, button shine, gold scroll-progress bar, page fade-in, floating badges, and rising sparks.
-- The admin panel always stays in light mode. Visitors who set "reduce motion" on their device get no animation.
-- To change when day starts/ends, edit the hours in `src/hooks/useTheme.js` and in the small script at the top of `<body>` in `index.html`. Colours for both modes are the variables at the end of `src/styles/index.css`.
+- The sun/moon button in the header switches the whole site between **day** and **night**. Until a visitor picks one, it follows their local time (6 am to 6 pm = day); their choice is remembered.
+- Night: twinkling stars over the banner. Day: drifting clouds. Glowing sparks rise in both. There is no big sun or moon picture covering the banner.
+- Other motion: hero text slides in, gold shimmering heading, product cards / tiles / photos pop in as you scroll, button shine, gold scroll-progress bar, page fade-in. Visitors who set "reduce motion" on their device get none of it.
+- To change the hours, edit `src/hooks/useTheme.js` and the small script in `index.html`.
 
 ## Other things to edit
 - `src/data/site.js` phone, address, WhatsApp

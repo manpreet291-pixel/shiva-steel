@@ -1,4 +1,5 @@
 // Vercel serverless function: handles every /api/* request (gallery, login, admin changes).
+// vercel.json rewrites /api/anything to this file as /api/index?path=anything.
 import crypto from 'node:crypto';
 import { createApi, seedDb, sendJson } from '../server/core.js';
 import { createBlobStore } from '../server/storage-blob.js';
@@ -18,8 +19,16 @@ function getHandler() {
 
 const NO_STORE_NEEDED = new Set(['/api/me', '/api/login', '/api/logout', '/api/health']);
 
+function apiPath(req) {
+  const url = new URL(req.url, 'http://localhost');
+  let p = req.query?.path ?? url.searchParams.get('path');
+  if (Array.isArray(p)) p = p.join('/');
+  if (typeof p === 'string') return `/api/${p.replace(/^\/+|\/+$/g, '')}`.replace(/\/$/, '');
+  return url.pathname.replace(/\/+$/, '') || '/api';
+}
+
 export default async function vercelHandler(req, res) {
-  const { pathname } = new URL(req.url, 'http://localhost');
+  const pathname = apiPath(req);
   const blobReady = !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL_OIDC_TOKEN);
   if (!blobReady && !NO_STORE_NEEDED.has(pathname)) {
     // Without a Blob store the website still shows its built-in sample gallery.

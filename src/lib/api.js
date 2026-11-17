@@ -7,6 +7,7 @@ const fallback = {
     return { ...c, order: i, count: mine.length, cover: mine[0]?.image || null };
   }),
   items: galleryItems,
+  banners: [],
   offline: true,
 };
 
@@ -54,10 +55,24 @@ export async function adminRequest(method, url, body) {
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   let data = {};
-  try {
-    data = await res.json();
-  } catch {
-    /* ignore */
+  const isJson = (res.headers.get('content-type') || '').includes('json');
+  if (isJson) {
+    try {
+      data = await res.json();
+    } catch {
+      /* ignore */
+    }
+  }
+  // An HTML answer (or 404/405) means the API is not deployed on this site.
+  if (!isJson || res.status === 404 || res.status === 405) {
+    if (!isJson || !data.error) {
+      const err = new Error(
+        'The admin backend was not found on this website. On Vercel, make sure the "api" folder and vercel.json were deployed, then redeploy (see README).'
+      );
+      err.status = 404;
+      err.backendMissing = true;
+      throw err;
+    }
   }
   if (!res.ok) {
     const err = new Error(data.error || `Request failed (${res.status})`);

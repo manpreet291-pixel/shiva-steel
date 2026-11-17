@@ -16,6 +16,7 @@ export default function useGallery() {
   return {
     categories: data?.categories || [],
     items: data?.items || [],
+    banners: data?.banners || [],
     loading: !data,
     offline: !!data?.offline,
   };

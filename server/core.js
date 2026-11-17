@@ -16,6 +16,7 @@ export function seedDb() {
   return {
     categories: galleryCategories.map((c, i) => ({ ...c, order: i })),
     items: galleryItems.map((i) => ({ ...i, createdAt: now })),
+    banners: [],
   };
 }
 
@@ -137,7 +138,7 @@ export function createApi({ store, adminPassword = '', secret, trustProxy = fals
         const mine = db.items.filter((i) => i.categoryId === c.id);
         return { ...c, count: mine.length, cover: mine[0]?.image || null };
       });
-    return { categories, items: db.items };
+    return { categories, items: db.items, banners: db.banners || [] };
   }
 
   async function route(req, res, pathname) {
@@ -171,11 +172,12 @@ export function createApi({ store, adminPassword = '', secret, trustProxy = fals
       return sendJson(res, 200, { ok: true }, { 'Set-Cookie': cookie(req, '', 0) });
     }
 
-    if (pathname.startsWith('/api/categories') || pathname.startsWith('/api/items')) {
+    if (pathname.startsWith('/api/categories') || pathname.startsWith('/api/items') || pathname.startsWith('/api/banners')) {
       requireAdmin(req);
       const parts = pathname.split('/').filter(Boolean);
       const id = parts[2];
       const db = await store.load();
+      db.banners ||= [];
 
       if (parts[1] === 'categories') {
         if (!id && method === 'POST') {
@@ -244,6 +246,24 @@ export function createApi({ store, adminPassword = '', secret, trustProxy = fals
           db.items = db.items.filter((i) => i.id !== item.id);
           await store.save(db);
           await store.removeImage(item.image);
+          return sendJson(res, 200, { ok: true });
+        }
+      }
+      if (parts[1] === 'banners') {
+        if (!id && method === 'POST') {
+          const b = await readJson(req);
+          if (db.banners.length >= 8) throw new HttpError(400, 'You can keep up to 8 banner images. Delete one first.');
+          const banner = { id: newId(), image: await saveImage(b.image), createdAt: new Date().toISOString() };
+          db.banners.push(banner);
+          await store.save(db);
+          return sendJson(res, 201, banner);
+        }
+        const banner = db.banners.find((x) => x.id === id);
+        if (!banner) throw new HttpError(404, 'Banner not found');
+        if (method === 'DELETE') {
+          db.banners = db.banners.filter((x) => x.id !== banner.id);
+          await store.save(db);
+          await store.removeImage(banner.image);
           return sendJson(res, 200, { ok: true });
         }
       }

@@ -23,7 +23,7 @@ export default function AdminPage() {
   let body;
   if (status.loading) body = <p className="empty">Loading…</p>;
   else if (status.offline)
-    body = <div className="admin-card"><h2>Backend not reachable</h2><p>The admin panel needs the server running (<code>npm run dev</code> or <code>npm start</code>).</p></div>;
+    body = <div className="admin-card"><h2>Backend not reachable</h2><p>The admin panel needs the backend. Locally run <code>npm run dev</code> or <code>npm start</code>. On Vercel, make sure the <code>api</code> folder and <code>vercel.json</code> were uploaded, connect a Blob store, then redeploy (see the README).</p></div>;
   else if (!status.admin) body = <Login configured={status.configured} onDone={check} />;
   else body = <Dashboard onLogout={check} />;
 
@@ -76,7 +76,7 @@ function Login({ configured, onDone }) {
 function Dashboard({ onLogout }) {
   const [tab, setTab] = useState('photos');
   const [notice, setNotice] = useState(null); // { type, text }
-  const { categories, items, loading, offline } = useGallery();
+  const { categories, items, banners, loading, offline } = useGallery();
 
   const say = (type, text) => setNotice({ type, text });
   const refresh = () => loadGallery(true);
@@ -104,6 +104,7 @@ function Dashboard({ onLogout }) {
       <div className="admin__head">
         <div className="tabs" role="tablist">
           <button role="tab" aria-selected={tab === 'photos'} className={tab === 'photos' ? 'tab tab--on' : 'tab'} onClick={() => setTab('photos')}>Photos</button>
+          <button role="tab" aria-selected={tab === 'banners'} className={tab === 'banners' ? 'tab tab--on' : 'tab'} onClick={() => setTab('banners')}>Banners</button>
           <button role="tab" aria-selected={tab === 'categories'} className={tab === 'categories' ? 'tab tab--on' : 'tab'} onClick={() => setTab('categories')}>Categories</button>
         </div>
         <button className="btn btn--outline-dark btn--sm" onClick={logout}>Log out</button>
@@ -112,7 +113,9 @@ function Dashboard({ onLogout }) {
       {offline && <p className="msg msg--err">Could not load data from the server. On Vercel this usually means the Blob store is not connected yet (see the README).</p>}
       {loading ? <p className="empty">Loading…</p> : tab === 'photos'
         ? <PhotosTab categories={categories} items={items} run={run} say={say} />
-        : <CategoriesTab categories={categories} run={run} />}
+        : tab === 'banners'
+          ? <BannersTab banners={banners} run={run} say={say} />
+          : <CategoriesTab categories={categories} run={run} />}
     </>
   );
 }
@@ -280,5 +283,68 @@ function CategoryRow({ cat, run }) {
         <button className="btn btn--danger btn--sm" onClick={() => window.confirm(`Delete "${cat.name}" and its ${cat.count} photo(s)?`) && run(() => adminRequest('DELETE', `/api/categories/${cat.id}`), 'Category deleted.')}>Delete</button>
       </div>
     </div>
+  );
+}
+
+function BannersTab({ banners, run, say }) {
+  const [progress, setProgress] = useState('');
+  const fileRef = useRef(null);
+
+  const upload = async (e) => {
+    e.preventDefault();
+    const files = [...(fileRef.current?.files || [])];
+    if (!files.length) return say('err', 'Choose one or more banner images.');
+    let done = 0;
+    for (const file of files) {
+      setProgress(`Uploading ${done + 1} of ${files.length}…`);
+      try {
+        const image = await compressImage(file, 2200, 0.8);
+        await adminRequest('POST', '/api/banners', { image });
+        done += 1;
+      } catch (err) {
+        say('err', `${file.name}: ${err.message}`);
+        break;
+      }
+    }
+    setProgress('');
+    if (fileRef.current) fileRef.current.value = '';
+    await run(async () => {}, done ? `${done} banner${done > 1 ? 's' : ''} added.` : null);
+  };
+
+  return (
+    <>
+      <form className="admin-card" onSubmit={upload}>
+        <h2>Add banner images</h2>
+        <p className="hint">
+          These appear at the top of the home page. Best size: wide, about 2000 × 1000 px (JPG or WebP). Keep the main
+          subject on the right side, because the heading sits on the left. With 2 or more banners the home page becomes
+          a slideshow. Up to 8 banners.
+        </p>
+        <div className="field">
+          <label htmlFor="bn-file">Banner images</label>
+          <input id="bn-file" ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" multiple />
+        </div>
+        <button className="btn btn--gold" disabled={!!progress}>{progress || 'Upload banner'}</button>
+      </form>
+
+      <div className="admin-card">
+        <h2>Current banners ({banners.length})</h2>
+        {banners.length === 0 ? (
+          <p className="empty">No banner uploaded yet, so the home page shows the default sample banner.</p>
+        ) : (
+          <div className="admin-grid admin-grid--wide">
+            {banners.map((b, i) => (
+              <div className="photo" key={b.id}>
+                <img src={asset(b.image)} alt={`Banner ${i + 1}`} loading="lazy" />
+                <div className="photo__actions">
+                  <span className="hint">Banner {i + 1}</span>
+                  <button className="btn btn--danger btn--sm" onClick={() => window.confirm('Delete this banner?') && run(() => adminRequest('DELETE', `/api/banners/${b.id}`), 'Banner deleted.')}>Delete</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
