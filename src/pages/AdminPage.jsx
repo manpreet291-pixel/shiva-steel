@@ -6,7 +6,6 @@ import { adminRequest, compressImage, loadGallery } from '../lib/api.js';
 import { products } from '../data/products.js';
 import { asset } from '../data/site.js';
 
-
 export default function AdminPage() {
   usePageMeta({ title: 'Admin | SHIVA STEEL', noindex: true });
   const [status, setStatus] = useState({ loading: true, admin: false, configured: true });
