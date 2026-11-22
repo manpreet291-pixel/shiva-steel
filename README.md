@@ -56,11 +56,8 @@ The admin panel needs this Node server, so use hosting that runs Node **with a p
 - One banner = a fixed image. Two or more (up to 8) = an automatic slideshow with arrows and dots.
 - Until you upload one, the home page shows a default sample banner.
 
-## Day / night mode and animations
-- The sun/moon button in the header switches the whole site between **day** and **night**. Until a visitor picks one, it follows their local time (6 am to 6 pm = day); their choice is remembered.
-- Night: twinkling stars over the banner. Day: drifting clouds. Glowing sparks rise in both. There is no big sun or moon picture covering the banner.
+## Animations
 - Other motion: hero text slides in, gold shimmering heading, product cards / tiles / photos pop in as you scroll, button shine, gold scroll-progress bar, page fade-in. Visitors who set "reduce motion" on their device get none of it.
-- To change the hours, edit `src/hooks/useTheme.js` and the small script in `index.html`.
 
 ## Other things to edit
 - `src/data/site.js` phone, address, WhatsApp
@@ -71,3 +68,10 @@ The admin panel needs this Node server, so use hosting that runs Node **with a p
 
 ## Contact form
 No email backend. A valid form opens WhatsApp with the details prefilled, and the customer presses Send there.
+
+## Latest updates
+- Day/night toggle and clouds removed; reveal animations, sparks and the banner slideshow remain.
+- Gallery viewer: click a photo to open; zoom with the +/- buttons, mouse wheel, double-click or pinch; drag to move when zoomed; arrow keys / swipe to change photos; Esc to close.
+- Footer shows social icons instead of the logo. WhatsApp, Call and Map always show. Add Instagram / Facebook / YouTube links in **Admin → Settings**; each icon appears once its link is saved.
+- Home page product cards automatically show the newest photo you upload to the linked gallery category (falls back to the sample image).
+- Vercel: after redeploying, set `ADMIN_PASSWORD` and connect a Vercel Blob store so uploads and settings persist.

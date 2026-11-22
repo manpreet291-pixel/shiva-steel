@@ -17,6 +17,7 @@ export function seedDb() {
     categories: galleryCategories.map((c, i) => ({ ...c, order: i })),
     items: galleryItems.map((i) => ({ ...i, createdAt: now })),
     banners: [],
+    settings: { social: { instagram: '', facebook: '', youtube: '' } },
   };
 }
 
@@ -138,7 +139,7 @@ export function createApi({ store, adminPassword = '', secret, trustProxy = fals
         const mine = db.items.filter((i) => i.categoryId === c.id);
         return { ...c, count: mine.length, cover: mine[0]?.image || null };
       });
-    return { categories, items: db.items, banners: db.banners || [] };
+    return { categories, items: db.items, banners: db.banners || [], settings: { social: db.settings?.social || {} } };
   }
 
   async function route(req, res, pathname) {
@@ -170,6 +171,26 @@ export function createApi({ store, adminPassword = '', secret, trustProxy = fals
     }
     if (pathname === '/api/logout' && method === 'POST') {
       return sendJson(res, 200, { ok: true }, { 'Set-Cookie': cookie(req, '', 0) });
+    }
+
+    if (pathname === '/api/settings' && method === 'PUT') {
+      requireAdmin(req);
+      const b = await readJson(req);
+      const db = await store.load();
+      const social = {};
+      for (const key of ['instagram', 'facebook', 'youtube']) {
+        let v = cleanText(b.social?.[key], 200);
+        if (v && !/^https?:\/\//i.test(v)) v = `https://${v}`;
+        if (v) {
+          let u;
+          try { u = new URL(v); } catch { throw new HttpError(400, `The ${key} link is not a valid web address`); }
+          if (!u.hostname.includes('.')) throw new HttpError(400, `The ${key} link is not a valid web address`);
+        }
+        social[key] = v;
+      }
+      db.settings = { ...(db.settings || {}), social };
+      await store.save(db);
+      return sendJson(res, 200, { social });
     }
 
     if (pathname.startsWith('/api/categories') || pathname.startsWith('/api/items') || pathname.startsWith('/api/banners')) {
@@ -281,7 +302,9 @@ export function createApi({ store, adminPassword = '', secret, trustProxy = fals
       if (res.headersSent) return res.end();
       if (err instanceof HttpError) return sendJson(res, err.status, { error: err.message });
       console.error(err);
-      return sendJson(res, 500, { error: 'Server error' });
+      // Admins get the reason (e.g. a storage problem) to make set-up issues easy to find
+      const detail = isAdmin(req) ? String(err.message || '').slice(0, 200) : undefined;
+      return sendJson(res, 500, { error: detail ? `Server error: ${detail}` : 'Server error' });
     }
   };
 }

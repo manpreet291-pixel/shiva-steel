@@ -19,10 +19,10 @@ function Home() {
   return (
     <>
       <Hero />
-      <Products />
-       <GallerySection />
-      <WhyChoose />
       <About />
+      <Products />
+      <WhyChoose />
+      <GallerySection />
       <Contact />
     </>
   );

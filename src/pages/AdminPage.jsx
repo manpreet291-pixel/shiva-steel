@@ -76,7 +76,7 @@ function Login({ configured, onDone }) {
 function Dashboard({ onLogout }) {
   const [tab, setTab] = useState('photos');
   const [notice, setNotice] = useState(null); // { type, text }
-  const { categories, items, banners, loading, offline } = useGallery();
+  const { categories, items, banners, settings, loading, offline } = useGallery();
 
   const say = (type, text) => setNotice({ type, text });
   const refresh = () => loadGallery(true);
@@ -106,6 +106,7 @@ function Dashboard({ onLogout }) {
           <button role="tab" aria-selected={tab === 'photos'} className={tab === 'photos' ? 'tab tab--on' : 'tab'} onClick={() => setTab('photos')}>Photos</button>
           <button role="tab" aria-selected={tab === 'banners'} className={tab === 'banners' ? 'tab tab--on' : 'tab'} onClick={() => setTab('banners')}>Banners</button>
           <button role="tab" aria-selected={tab === 'categories'} className={tab === 'categories' ? 'tab tab--on' : 'tab'} onClick={() => setTab('categories')}>Categories</button>
+          <button role="tab" aria-selected={tab === 'settings'} className={tab === 'settings' ? 'tab tab--on' : 'tab'} onClick={() => setTab('settings')}>Settings</button>
         </div>
         <button className="btn btn--outline-dark btn--sm" onClick={logout}>Log out</button>
       </div>
@@ -115,7 +116,9 @@ function Dashboard({ onLogout }) {
         ? <PhotosTab categories={categories} items={items} run={run} say={say} />
         : tab === 'banners'
           ? <BannersTab banners={banners} run={run} say={say} />
-          : <CategoriesTab categories={categories} run={run} />}
+          : tab === 'settings'
+            ? <SettingsTab settings={settings} run={run} />
+            : <CategoriesTab categories={categories} run={run} />}
     </>
   );
 }
@@ -283,6 +286,22 @@ function CategoryRow({ cat, run }) {
         <button className="btn btn--danger btn--sm" onClick={() => window.confirm(`Delete "${cat.name}" and its ${cat.count} photo(s)?`) && run(() => adminRequest('DELETE', `/api/categories/${cat.id}`), 'Category deleted.')}>Delete</button>
       </div>
     </div>
+  );
+}
+
+function SettingsTab({ settings, run }) {
+  const saved = settings?.social || {};
+  const [v, setV] = useState({ instagram: saved.instagram || '', facebook: saved.facebook || '', youtube: saved.youtube || '' });
+  const set = (k) => (e) => setV((x) => ({ ...x, [k]: e.target.value }));
+  return (
+    <form className="admin-card" onSubmit={(e) => { e.preventDefault(); run(() => adminRequest('PUT', '/api/settings', { social: v }), 'Social links saved.'); }}>
+      <h2>Social media links</h2>
+      <p className="hint">Paste full links (https://…). Icons appear in the website footer only for links you fill in. Leave blank to hide.</p>
+      <div className="field"><label htmlFor="s-ig">Instagram</label><input id="s-ig" type="text" inputMode="url" placeholder="https://instagram.com/your-page" value={v.instagram} onChange={set('instagram')} /></div>
+      <div className="field"><label htmlFor="s-fb">Facebook</label><input id="s-fb" type="text" inputMode="url" placeholder="https://facebook.com/your-page" value={v.facebook} onChange={set('facebook')} /></div>
+      <div className="field"><label htmlFor="s-yt">YouTube</label><input id="s-yt" type="text" inputMode="url" placeholder="https://youtube.com/@your-channel" value={v.youtube} onChange={set('youtube')} /></div>
+      <button className="btn btn--dark" type="submit">Save links</button>
+    </form>
   );
 }
 
