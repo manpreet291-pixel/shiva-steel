@@ -6,18 +6,10 @@ import { products } from '../data/products.js';
 export default function Products() {
   const ref = useReveal();
   const gridRef = useReveal();
-  const { categories, items, productImages } = useGallery();
+  const { categories } = useGallery();
   const galleryFor = (productId) => {
     const cat = categories.find((c) => c.productId === productId && c.count > 0) || categories.find((c) => c.productId === productId);
     return cat ? `/gallery/${cat.slug}` : '/gallery';
-  };
-
-  // The newest real photo uploaded to a gallery category linked to this product becomes its card image.
-  const imageFor = (product) => {
-    if (productImages[product.id]) return productImages[product.id]; // set manually in Admin → Products
-    const ids = new Set(categories.filter((c) => c.productId === product.id).map((c) => c.id));
-    const photo = items.find((i) => ids.has(i.categoryId) && !i.sample);
-    return photo ? photo.image : product.image;
   };
 
   return (
@@ -32,10 +24,10 @@ export default function Products() {
         </div>
         <div className="grid stagger" ref={gridRef}>
           {products.map((p) => (
-            <ProductCard key={p.id} product={p} image={imageFor(p)} galleryHref={galleryFor(p.id)} />
+            <ProductCard key={p.id} product={p} galleryHref={galleryFor(p.id)} />
           ))}
         </div>
-        <p className="note">Photos update automatically from the gallery. Tap "View photo gallery" to see more of our work.</p>
+        <p className="note">Product images are sample illustrations. See the gallery for our work.</p>
       </div>
     </section>
   );

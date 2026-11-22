@@ -17,8 +17,6 @@ export default function useGallery() {
     categories: data?.categories || [],
     items: data?.items || [],
     banners: data?.banners || [],
-    productImages: data?.productImages || {},
-    settings: data?.settings || { social: {} },
     loading: !data,
     offline: !!data?.offline,
   };

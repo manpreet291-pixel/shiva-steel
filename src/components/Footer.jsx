@@ -1,4 +1,4 @@
-import SocialLinks from './SocialLinks.jsx';
+import Logo from './Logo.jsx';
 import { WhatsAppIcon } from './ProductCard.jsx';
 import { Link } from '../lib/router.jsx';
 import { products } from '../data/products.js';
@@ -9,8 +9,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer__grid">
         <div>
-          <h4>Follow Us</h4>
-          <SocialLinks />
+          <Logo />
           <p className="footer__about">
             Steel fabrication, gates, railings and architectural steel accessories in Kharar, Mohali.
           </p>

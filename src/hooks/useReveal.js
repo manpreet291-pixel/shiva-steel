@@ -22,12 +22,7 @@ export default function useReveal(dep) {
       { threshold: 0.1 }
     );
     observer.observe(el);
-    // Safety net: never leave content hidden if the observer does not fire
-    const timer = window.setTimeout(() => el.classList.add('is-visible'), 2500);
-    return () => {
-      observer.disconnect();
-      window.clearTimeout(timer);
-    };
+    return () => observer.disconnect();
   }, [dep]);
 
   return ref;
