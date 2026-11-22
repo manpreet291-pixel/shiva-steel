@@ -2,7 +2,7 @@
 // vercel.json rewrites /api/anything to this file as /api/index?path=anything.
 import crypto from 'node:crypto';
 import { createApi, seedDb, sendJson } from '../server/core.js';
-import { createBlobStore } from '../server/storage-blob.js';
+import { createBlobStore, findBlobToken } from '../server/storage-blob.js';
 
 let handler;
 
@@ -29,11 +29,20 @@ function apiPath(req) {
 
 export default async function vercelHandler(req, res) {
   const pathname = apiPath(req);
-  const blobReady = !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL_OIDC_TOKEN);
+  const blobReady = !!(findBlobToken() || process.env.VERCEL_OIDC_TOKEN);
+  if (pathname === '/api/health') {
+    // Shows what is configured (never the secret values) so setup problems are easy to spot.
+    return sendJson(res, 200, {
+      ok: true,
+      storageConnected: blobReady,
+      adminPasswordSet: !!process.env.ADMIN_PASSWORD,
+      tokenVariablesFound: Object.keys(process.env).filter((k) => /READ_WRITE_TOKEN|BLOB/i.test(k)),
+    });
+  }
   if (!blobReady && !NO_STORE_NEEDED.has(pathname)) {
     // Without a Blob store the website still shows its built-in sample gallery.
     return sendJson(res, 503, {
-      error: 'Storage is not connected. In Vercel: Storage -> Create a public Blob store -> connect it to this project, then redeploy.',
+      error: 'Storage is not connected to this deployment. In Vercel: Storage -> Create a PUBLIC Blob store -> connect it to this project (all environments), then Deployments -> Redeploy. Open /api/health on your site to check.',
     });
   }
   return getHandler()(req, res, pathname);

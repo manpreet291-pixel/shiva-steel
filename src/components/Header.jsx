@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import Logo from './Logo.jsx';
-import ThemeToggle from './ThemeToggle.jsx';
 import { Link } from '../lib/router.jsx';
 import { whatsappLink } from '../data/site.js';
 
@@ -55,8 +54,6 @@ export default function Header({ solid = false }) {
             Get a Quote
           </a>
         </nav>
-
-        <ThemeToggle />
 
         <button
           type="button"

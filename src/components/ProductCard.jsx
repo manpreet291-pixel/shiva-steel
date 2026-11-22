@@ -1,12 +1,24 @@
+import { useEffect, useState } from 'react';
 import { Link } from '../lib/router.jsx';
 import { asset, whatsappLink } from '../data/site.js';
 
-export default function ProductCard({ product, galleryHref }) {
+export default function ProductCard({ product, image, galleryHref }) {
+  const wanted = image || product.image;
+  const [src, setSrc] = useState(wanted);
+  useEffect(() => setSrc(wanted), [wanted]);
   const message = `Hello SHIVA STEEL, I am interested in ${product.title}. Please share more details.`;
   return (
     <article className="card" id={`product-${product.id}`}>
       <div className="card__media">
-        <img src={asset(product.image)} alt={product.alt} loading="lazy" width="800" height="600" />
+        <img
+          key={src}
+          src={asset(src)}
+          alt={product.alt}
+          loading="lazy"
+          width="800"
+          height="600"
+          onError={() => src !== product.image && setSrc(product.image)}
+        />
       </div>
       <div className="card__body">
         <h3 className="card__title">{product.title}</h3>

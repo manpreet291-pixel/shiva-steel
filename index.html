@@ -54,13 +54,6 @@
     </script>
   </head>
   <body>
-    <script>
-      try {
-        var t = localStorage.getItem('ss-theme');
-        if (!t) { var h = new Date().getHours(); t = h >= 6 && h < 18 ? 'light' : 'dark'; }
-        document.documentElement.dataset.theme = t;
-      } catch (e) { document.documentElement.dataset.theme = 'light'; }
-    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

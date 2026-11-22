@@ -76,6 +76,7 @@ export default function CategoryPage({ slug }) {
                 <button type="button" key={g.id} className="gallery__item" onClick={() => setActive(i)} aria-label={`Open image: ${g.title}`}>
                   <img src={asset(g.image)} alt={`${g.title} by SHIVA STEEL`} loading="lazy" width="800" height="600" />
                   {g.sample && <span className="gallery__sample">Sample image</span>}
+                  <span className="gallery__zoom" aria-hidden="true">⤢</span>
                   <span className="gallery__caption"><small>{category.name}</small>{g.title}</span>
                 </button>
               ))}
