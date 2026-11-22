@@ -420,7 +420,7 @@ body { background: var(--bg); color: var(--body); }
 }
 
 .page { animation: pageIn 0.55s ease both; }
-.lightbox__figure img { animation: zoomIn 0.35s ease both; }
+.lightbox__figure img { animation: lbFade 0.35s ease backwards; }
 
 /* Section heading underline that grows in */
 .section__head .section__title::after { content: ''; display: block; height: 3px; width: 0; margin: 14px auto 0; border-radius: 3px; background: var(--gold); transition: width 0.9s ease 0.35s; }
@@ -472,7 +472,7 @@ body { background: var(--bg); color: var(--body); }
 .lb__stage { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none; cursor: zoom-in; user-select: none; }
 .lb__stage.is-zoomed { cursor: grab; }
 .lb__stage.is-dragging.is-zoomed { cursor: grabbing; }
-.lb__img { max-width: 94%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #111; transition: transform 0.25s ease; will-change: transform; animation: zoomIn 0.35s ease both; }
+.lb__img { max-width: 94%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #111; transition: transform 0.25s ease; will-change: transform; animation: lbFade 0.35s ease backwards; }
 .lb__stage.is-dragging .lb__img { transition: none; }
 .lb__nav { position: absolute; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, 0.12); color: #fff; font-size: 1.9rem; line-height: 1; transition: background 0.2s ease; z-index: 2; }
 .lb__nav:hover { background: var(--gold); color: #151515; }
@@ -501,3 +501,5 @@ body { background: var(--bg); color: var(--body); }
 .social__link--instagram:hover { background: #e1306c; border-color: #e1306c; color: #fff; }
 .social__link--facebook:hover { background: #1877f2; border-color: #1877f2; color: #fff; }
 .social__link--youtube:hover { background: #ff0000; border-color: #ff0000; color: #fff; }
+.lb__top { background: #000; position: relative; z-index: 3; }
+@keyframes lbFade { from { opacity: 0; } to { opacity: 1; } }

@@ -14,12 +14,12 @@ const ICONS = {
       <path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z" />
     </svg>
   ),
-  // map: (
-  //   <svg viewBox="0 0 24 24" width="20" height="20" {...stroke} aria-hidden="true">
-  //     <path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.500-7 11-7 11Z" />
-  //     <circle cx="12" cy="10" r="2.5" />
-  //   </svg>
-  // ),
+  map: (
+    <svg viewBox="0 0 24 24" width="20" height="20" {...stroke} aria-hidden="true">
+      <path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.500-7 11-7 11Z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </svg>
+  ),
   instagram: (
     <svg viewBox="0 0 24 24" width="20" height="20" {...stroke} aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -51,7 +51,7 @@ export default function SocialLinks() {
     s.youtube && { key: 'youtube', label: 'YouTube', href: s.youtube },
     { key: 'whatsapp', label: 'WhatsApp', href: whatsappLink() },
     { key: 'phone', label: `Call ${SITE.phoneDisplay}`, href: `tel:${SITE.phoneTel}`, internal: true },
-   // { key: 'map', label: 'Find us on Google Maps', href: mapsLink },
+    { key: 'map', label: 'Find us on Google Maps', href: mapsLink },
   ].filter(Boolean);
 
   return (

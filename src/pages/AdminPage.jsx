@@ -76,7 +76,7 @@ function Login({ configured, onDone }) {
 function Dashboard({ onLogout }) {
   const [tab, setTab] = useState('photos');
   const [notice, setNotice] = useState(null); // { type, text }
-  const { categories, items, banners, settings, loading, offline } = useGallery();
+  const { categories, items, banners, settings, productImages, loading, offline } = useGallery();
 
   const say = (type, text) => setNotice({ type, text });
   const refresh = () => loadGallery(true);
@@ -106,6 +106,7 @@ function Dashboard({ onLogout }) {
           <button role="tab" aria-selected={tab === 'photos'} className={tab === 'photos' ? 'tab tab--on' : 'tab'} onClick={() => setTab('photos')}>Photos</button>
           <button role="tab" aria-selected={tab === 'banners'} className={tab === 'banners' ? 'tab tab--on' : 'tab'} onClick={() => setTab('banners')}>Banners</button>
           <button role="tab" aria-selected={tab === 'categories'} className={tab === 'categories' ? 'tab tab--on' : 'tab'} onClick={() => setTab('categories')}>Categories</button>
+          <button role="tab" aria-selected={tab === 'products'} className={tab === 'products' ? 'tab tab--on' : 'tab'} onClick={() => setTab('products')}>Products</button>
           <button role="tab" aria-selected={tab === 'settings'} className={tab === 'settings' ? 'tab tab--on' : 'tab'} onClick={() => setTab('settings')}>Settings</button>
         </div>
         <button className="btn btn--outline-dark btn--sm" onClick={logout}>Log out</button>
@@ -116,7 +117,9 @@ function Dashboard({ onLogout }) {
         ? <PhotosTab categories={categories} items={items} run={run} say={say} />
         : tab === 'banners'
           ? <BannersTab banners={banners} run={run} say={say} />
-          : tab === 'settings'
+          : tab === 'products'
+            ? <ProductsTab productImages={productImages} run={run} say={say} />
+            : tab === 'settings'
             ? <SettingsTab settings={settings} run={run} />
             : <CategoriesTab categories={categories} run={run} />}
     </>
@@ -286,6 +289,38 @@ function CategoryRow({ cat, run }) {
         <button className="btn btn--danger btn--sm" onClick={() => window.confirm(`Delete "${cat.name}" and its ${cat.count} photo(s)?`) && run(() => adminRequest('DELETE', `/api/categories/${cat.id}`), 'Category deleted.')}>Delete</button>
       </div>
     </div>
+  );
+}
+
+function ProductsTab({ productImages, run, say }) {
+  const [busy, setBusy] = useState('');
+  const pick = async (p, file) => {
+    if (!file) return;
+    setBusy(p.id);
+    try {
+      const image = await compressImage(file);
+      await run(() => adminRequest('PUT', `/api/product-images/${p.id}`, { image }), `${p.title} image updated.`);
+    } catch (err) { say('err', err.message || 'Could not upload that image.'); }
+    setBusy('');
+  };
+  return (
+    <>
+      <p className="hint">Choose the picture shown on each home page product card. If you don't set one, the newest photo from the linked gallery category is used, then the sample image.</p>
+      <div className="admin-grid admin-grid--wide">
+        {products.map((p) => {
+          const custom = productImages[p.id];
+          return (
+            <div className="admin-card" key={p.id}>
+              <img src={asset(custom || p.image)} alt={p.title} style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', borderRadius: 10 }} />
+              <h2>{p.title}</h2>
+              <input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy === p.id} onChange={(e) => { pick(p, e.target.files[0]); e.target.value = ''; }} />
+              {busy === p.id && <span className="hint">Uploading…</span>}
+              {custom && <button className="btn btn--danger btn--sm" onClick={() => run(() => adminRequest('DELETE', `/api/product-images/${p.id}`), 'Image removed.')}>Remove custom image</button>}
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
 

@@ -8,6 +8,7 @@ const fallback = {
   }),
   items: galleryItems,
   banners: [],
+  productImages: {},
   settings: { social: {} },
   offline: true,
 };

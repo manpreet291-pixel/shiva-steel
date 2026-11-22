@@ -6,7 +6,7 @@ import { products } from '../data/products.js';
 export default function Products() {
   const ref = useReveal();
   const gridRef = useReveal();
-  const { categories, items } = useGallery();
+  const { categories, items, productImages } = useGallery();
   const galleryFor = (productId) => {
     const cat = categories.find((c) => c.productId === productId && c.count > 0) || categories.find((c) => c.productId === productId);
     return cat ? `/gallery/${cat.slug}` : '/gallery';
@@ -14,6 +14,7 @@ export default function Products() {
 
   // The newest real photo uploaded to a gallery category linked to this product becomes its card image.
   const imageFor = (product) => {
+    if (productImages[product.id]) return productImages[product.id]; // set manually in Admin → Products
     const ids = new Set(categories.filter((c) => c.productId === product.id).map((c) => c.id));
     const photo = items.find((i) => ids.has(i.categoryId) && !i.sample);
     return photo ? photo.image : product.image;

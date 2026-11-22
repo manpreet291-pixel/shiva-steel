@@ -70,6 +70,7 @@ The admin panel needs this Node server, so use hosting that runs Node **with a p
 No email backend. A valid form opens WhatsApp with the details prefilled, and the customer presses Send there.
 
 ## Latest updates
+- **Admin → Products** tab: upload or remove the image of each home page product card (overrides the automatic gallery photo).
 - Day/night toggle and clouds removed; reveal animations, sparks and the banner slideshow remain.
 - Gallery viewer: click a photo to open; zoom with the +/- buttons, mouse wheel, double-click or pinch; drag to move when zoomed; arrow keys / swipe to change photos; Esc to close.
 - Footer shows social icons instead of the logo. WhatsApp, Call and Map always show. Add Instagram / Facebook / YouTube links in **Admin → Settings**; each icon appears once its link is saved.

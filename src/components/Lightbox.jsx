@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { asset } from '../data/site.js';
 
 const MIN = 1;
@@ -156,7 +157,8 @@ export default function Lightbox({ items, index, onClose, onIndex }) {
   if (!item) return null;
   const zoomed = zoom > 1.01;
 
-  return (
+  // Rendered on <body> so page animations/transforms can't trap it under the header or float buttons.
+  return createPortal(
     <div className="lb" role="dialog" aria-modal="true" aria-label={item.title}>
       <div className="lb__top">
         <div className="lb__title">
@@ -207,6 +209,7 @@ export default function Lightbox({ items, index, onClose, onIndex }) {
           ))}
         </div>
       )}
-    </div>
+    </div>,
+    document.body
   );
 }

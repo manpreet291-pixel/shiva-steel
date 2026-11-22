@@ -139,7 +139,7 @@ export function createApi({ store, adminPassword = '', secret, trustProxy = fals
         const mine = db.items.filter((i) => i.categoryId === c.id);
         return { ...c, count: mine.length, cover: mine[0]?.image || null };
       });
-    return { categories, items: db.items, banners: db.banners || [], settings: { social: db.settings?.social || {} } };
+    return { categories, items: db.items, banners: db.banners || [], settings: { social: db.settings?.social || {} }, productImages: db.productImages || {} };
   }
 
   async function route(req, res, pathname) {
@@ -193,7 +193,7 @@ export function createApi({ store, adminPassword = '', secret, trustProxy = fals
       return sendJson(res, 200, { social });
     }
 
-    if (pathname.startsWith('/api/categories') || pathname.startsWith('/api/items') || pathname.startsWith('/api/banners')) {
+    if (pathname.startsWith('/api/categories') || pathname.startsWith('/api/items') || pathname.startsWith('/api/banners') || pathname.startsWith('/api/product-images')) {
       requireAdmin(req);
       const parts = pathname.split('/').filter(Boolean);
       const id = parts[2];
@@ -267,6 +267,26 @@ export function createApi({ store, adminPassword = '', secret, trustProxy = fals
           db.items = db.items.filter((i) => i.id !== item.id);
           await store.save(db);
           await store.removeImage(item.image);
+          return sendJson(res, 200, { ok: true });
+        }
+      }
+      if (parts[1] === 'product-images') {
+        if (!PRODUCT_IDS.has(id)) throw new HttpError(404, 'Product not found');
+        db.productImages ||= {};
+        if (method === 'PUT') {
+          const b = await readJson(req);
+          const image = await saveImage(b.image);
+          const old = db.productImages[id];
+          db.productImages[id] = image;
+          await store.save(db);
+          if (old) await store.removeImage(old);
+          return sendJson(res, 200, { id, image });
+        }
+        if (method === 'DELETE') {
+          const old = db.productImages[id];
+          delete db.productImages[id];
+          await store.save(db);
+          if (old) await store.removeImage(old);
           return sendJson(res, 200, { ok: true });
         }
       }
