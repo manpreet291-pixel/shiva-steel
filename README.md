@@ -76,3 +76,9 @@ No email backend. A valid form opens WhatsApp with the details prefilled, and th
 - Footer shows social icons instead of the logo. WhatsApp, Call and Map always show. Add Instagram / Facebook / YouTube links in **Admin → Settings**; each icon appears once its link is saved.
 - Home page product cards automatically show the newest photo you upload to the linked gallery category (falls back to the sample image).
 - Vercel: after redeploying, set `ADMIN_PASSWORD` and connect a Vercel Blob store so uploads and settings persist.
+
+## Troubleshooting: "Storage is not connected"
+1. Open `https://YOUR-SITE/api/health`. It shows `storageConnected` and the names of any Blob token variables found.
+2. If `storageConnected` is false: Vercel project → **Settings → Environment Variables** and check a `…READ_WRITE_TOKEN` variable exists and is ticked for **Production**. If not, open **Storage**, click your Blob store and press **Connect Project** (select all environments).
+3. Environment variables only apply to new deployments: **Deployments → ⋯ → Redeploy** (untick "use existing build cache").
+4. The store must be **Public**. A custom prefix on the variable (for example `STORE_READ_WRITE_TOKEN`) is also accepted.

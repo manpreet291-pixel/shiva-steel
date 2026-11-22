@@ -51,7 +51,7 @@ export default function SocialLinks() {
     s.youtube && { key: 'youtube', label: 'YouTube', href: s.youtube },
     { key: 'whatsapp', label: 'WhatsApp', href: whatsappLink() },
     { key: 'phone', label: `Call ${SITE.phoneDisplay}`, href: `tel:${SITE.phoneTel}`, internal: true },
-    //{ key: 'map', label: 'Find us on Google Maps', href: mapsLink },
+    { key: 'map', label: 'Find us on Google Maps', href: mapsLink },
   ].filter(Boolean);
 
   return (
